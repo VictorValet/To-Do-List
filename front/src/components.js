@@ -16,6 +16,25 @@ export function AlertMessage({ showAlert, alertMessage }) {
 	}
 }
 
+export function SearchBar({ searchBar, handleInputChange, reinitSearchBar }) {
+	return (
+		<div className="mb-3 d-flex align-items-center">
+			<input
+				type="text"
+				id="searchBar"
+				name="searchBar"
+				value={searchBar}
+				onChange={handleInputChange}
+				className="form-control me-2"
+				placeholder="Search tasks by name"
+			/>
+			<button type="button" className="btn btn-outline-secondary" onClick={reinitSearchBar}>
+				<i className="bi bi-x-circle-fill"></i>
+			</button>
+		</div>
+	);
+}
+
 export function TaskForm({ name, description, dueDate, priority, handleInputChange, handleKeyPress, createTask }) {
 	return (
 		<tr>

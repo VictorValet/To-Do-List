@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import {
 	AlertMessage,
+	SearchBar,
 	TaskForm,
 	TaskHeadRow,
 	TaskList
@@ -21,11 +22,12 @@ class App extends Component {
 			showAlert: false,
 			alertMessage: "Required: name (must be less than 255 characters), due date, priority.",
 			dueDate: aWeekAway(),
-			priority: "2"		
+			priority: "2",
+			searchBar: ""		
 		}
   	}
 
-	reinitState = () => {
+	reinitForm = () => {
 		this.setState({
 			name: "",
 			description: "",
@@ -33,6 +35,13 @@ class App extends Component {
 			priority: "2"
 		});
 	}
+
+	reinitSearchBar = () => {
+		this.setState({
+			searchBar: ""
+		});
+	}
+
 
 	componentDidMount() {
 		this.fetchTasks();
@@ -83,7 +92,7 @@ class App extends Component {
 		})
 		.then(response => response.json())
 		.then(() => {
-			this.reinitState();
+			this.reinitForm();
 			this.fetchTasks();
 		})
 		.catch(error => console.error('Error creating task:', error));
@@ -124,8 +133,9 @@ class App extends Component {
 	}
 
 	render() {
-		const { tasks, name, description, dueDate, priority, showAlert, alertMessage } = this.state;
-		
+		const { tasks, name, description, dueDate, priority, searchBar, showAlert, alertMessage } = this.state;
+		const filteredTasks = tasks.filter(task => task.name.toLowerCase().includes(searchBar.toLowerCase()));	
+
 		return (
 			<div className="container mt-5">
 				<AlertMessage
@@ -135,6 +145,11 @@ class App extends Component {
 				<div>
 					<h1 className="display-4">Tasklist</h1>
 				</div>
+				<SearchBar
+					searchBar={searchBar}
+					handleInputChange={this.handleInputChange}
+					reinitSearchBar={this.reinitSearchBar}
+				/>
 				<table className="table table-striped">
 					<thead className="thead-light">
 						<TaskHeadRow/>
@@ -150,7 +165,7 @@ class App extends Component {
 							createTask={this.createTask}
 						/>
 						<TaskList
-							tasks={tasks}
+							tasks={filteredTasks}
 							updateTaskStatus={this.updateTaskStatus}
 							deleteTask={this.deleteTask}
 							getRowCssClass={getRowCssClass}
