@@ -1,35 +1,65 @@
+const bodyParser = require("body-parser");
 const express = require("express");
-const app = express();
 const { Client } = require("pg");
 
-const db_host = "postgres";
-const db_port = 5432;
-const db_name = process.env.POSTGRES_DB;
-const db_user = process.env.POSTGRES_USER;
-const db_password = process.env.POSTGRES_PASSWORD;
-const waiting_time = 3000;
-let connection_attempts = 1;
+const app = express();
+const PORT = 5000;
+
+const DB_HOST = "postgres";
+const DB_PORT = 5432;
+const DB_NAME = process.env.POSTGRES_DB;
+const DB_USER = process.env.POSTGRES_USER;
+const DB_PASSWORD = process.env.POSTGRES_PASSWORD;
+const RESPONSE_DELAY = 3000;
+const TABLE_NAME = "tasks";
+
+let connectionAttempts = 1;
+let db = null;
 
 const connectToDatabase = () => {
-	const db = new Client({
-		host: db_host,
-		port: db_port,
-		user: db_user,
-		password: db_password,
-		database: db_name,
+	db = new Client({
+		host: DB_HOST,
+		port: DB_PORT,
+		user: DB_USER,
+		password: DB_PASSWORD,
+		database: DB_NAME,
 	});
 	db.connect((err) => {
 		if (err) {
-			console.log(`Database Connection Failed on attempt ${connection_attempts}:`, err);
-			connection_attempts++;
-			setTimeout(connectToDatabase, waiting_time);
+			console.log(`Database Connection Failed on attempt ${connectionAttempts}:`, err);
+			connectionAttempts++;
+			setTimeout(connectToDatabase, RESPONSE_DELAY);
 		} else {
 			console.log("Connected to Database");
+			createDatabaseTable();
 		}
 	});
 }
+
+const createDatabaseTable = () => {
+	console.log("Creating database table")
+
+	let query = `CREATE TABLE IF NOT EXISTS ${TABLE_NAME}(
+		id SERIAL PRIMARY KEY,
+		name VARCHAR(255) NOT NULL,
+		description VARCHAR,
+		status VARCHAR(10) NOT NULL CHECK (status IN ('pending', 'completed'))
+	)`;
+
+	db.query(query, (err) => {
+		if (err) {
+			console.error("Database Creation Error:", err);
+		} else {
+			console.log(`Successfully Created Table - ${TABLE_NAME}`)
+		}
+	})
+}
 connectToDatabase();
 
-app.listen(5000, () => {
-	console.log("Server is running on port 5000")
+app.use(express.static('front/build'));
+app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.listen(PORT, () => {
+	console.log(`Server is running on port ${PORT}`)
 })
