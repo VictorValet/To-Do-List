@@ -1,4 +1,4 @@
-# Simple to-do list app
+# ToDo List app
 
 ## Overview
 A simple to-do list application that allows the user to keep tracks of his task list.
@@ -68,3 +68,16 @@ The backend plays the role of both a server and an API, to keep the configuratio
 * DELETE /api/deleteTask
     - Deletes a task from the database.
     - Request body must contain 'id'.
+
+# Ameliorations
+- Migration handling for the database modifications (Back)
+- Better error handling (Back/Front)
+- Add user identification (Back/Front)
+- Add testing (Back/Front)
+- Enhance security (Back/Front)
+- Make 'deleteTask' just marking tasks as 'deleted' and make 'getTasks' filter these out (Back)
+- Add a mechanism to update overdue tasks only once each day (Back)
+- Add a button to rows to return tasks to 'pending' (Front)
+- Add a dropdown to rows to modify priorities after task creation (Back/Front)
+- Add a tickbox to rows and global buttons to batch delete or update tasks (Back/Front)
+- Better priorities mapping (Back/Front)
