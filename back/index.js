@@ -61,7 +61,7 @@ app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
 app.get("/api/getTasks", (req, res) => {
-	const querySelect = `SELECT * FROM ${TABLE_NAME}`;
+	const querySelect = `SELECT * FROM ${TABLE_NAME} ORDER BY id`;
 	db.query(querySelect, (err, result) => {
 		if (err) {
 			console.error(err);
