@@ -37,6 +37,14 @@ td {
 	background-color: #e0ffe0 !important;
 }
 
+.overdue-odd {
+	background-color: #ffefef !important;
+}
+
+.overdue-even {
+	background-color: #ffdfdf !important;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;

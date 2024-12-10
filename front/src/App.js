@@ -6,6 +6,7 @@ import {
 	TaskList
 } from './components.js'
 import { 
+	aWeekAway,
 	getRowCssClass
 } from './utils';
 import './App.css';
@@ -18,14 +19,16 @@ class App extends Component {
 			name: "",
 			description: "",
 			showAlert: false,
-			alertMessage: "Task name required, must be less than 255 characters."
+			alertMessage: "Required: name (must be less than 255 characters), due date.",
+			dueDate: aWeekAway()		
 		}
   	}
 
 	reinitState = () => {
 		this.setState({
 			name: "",
-			description: ""
+			description: "",
+			dueDate: aWeekAway()
 		});
 	}
 
@@ -56,8 +59,8 @@ class App extends Component {
 	 * Creates a new task and refresh the task list.
 	 */
 	createTask = () => {
-		const { name, description, showAlert } = this.state;
-		if (!name.trim() || name.length > 255) {
+		const { name, description, showAlert, dueDate } = this.state;
+		if (!name.trim() || name.length > 255 || !dueDate) {
 			console.error("Error in form");
 			if (!showAlert) {
 				setTimeout(() => {
@@ -74,7 +77,7 @@ class App extends Component {
 			headers: {
 				"Content-Type": "application/json"
 			},
-			body: JSON.stringify({ name, description })
+			body: JSON.stringify({ name, description, dueDate })
 		})
 		.then(response => response.json())
 		.then(() => {
@@ -119,7 +122,7 @@ class App extends Component {
 	}
 
 	render() {
-		const { tasks, name, description, showAlert, alertMessage } = this.state;
+		const { tasks, name, description, dueDate, showAlert, alertMessage } = this.state;
 		
 		return (
 			<div className="container mt-5">
@@ -138,6 +141,7 @@ class App extends Component {
 						<TaskForm
 							name={name}
 							description={description}
+							dueDate={dueDate}
 							handleInputChange={this.handleInputChange}
 							handleKeyPress={this.handleKeyPress}
 							createTask={this.createTask}

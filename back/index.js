@@ -43,7 +43,8 @@ const createDatabaseTable = () => {
 		id SERIAL PRIMARY KEY,
 		name VARCHAR(255) NOT NULL,
 		description VARCHAR,
-		status VARCHAR(10) NOT NULL CHECK (status IN ('pending', 'completed')) DEFAULT 'pending'
+		status VARCHAR(10) NOT NULL CHECK (status IN ('pending', 'completed', 'overdue')) DEFAULT 'pending',
+		due_date DATE NOT NULL
 	)`;
 
 	db.query(query, (err) => {
@@ -60,7 +61,23 @@ app.use(express.static('front/build'));
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+const updateOverdueTasks = () => {
+	const queryUpdate = `
+		UPDATE ${TABLE_NAME} SET status = 'overdue' 
+		WHERE due_date < CURRENT_DATE AND status = 'pending'
+	`;
+	db.query(queryUpdate);
+}
+
 app.get("/api/getTasks", (req, res) => {
+	try {
+		updateOverdueTasks();
+	} catch(err) {
+		console.error(err);
+		res.status(500).send(err);
+		return ;
+	}
+	
 	const querySelect = `SELECT * FROM ${TABLE_NAME} ORDER BY id`;
 	db.query(querySelect, (err, result) => {
 		if (err) {
@@ -73,12 +90,12 @@ app.get("/api/getTasks", (req, res) => {
 })
 
 app.post("/api/createTask", (req, res) => {
-	const { name, description } = req.body;
+	const { name, description, dueDate } = req.body;
 	const query = `
-		INSERT INTO ${TABLE_NAME} (name, description) 
-		VALUES ($1,$2)
+		INSERT INTO ${TABLE_NAME} (name, description, due_date) 
+		VALUES ($1,$2,$3)
 	`;
-	db.query(query, [name, description], (error, result) => {
+	db.query(query, [name, description, dueDate], (error, result) => {
 		if (error) {
 			console.log(error);
 			res.status(500).send(error);

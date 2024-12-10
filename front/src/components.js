@@ -10,7 +10,7 @@ export function AlertMessage({ showAlert, alertMessage }) {
 	}
 }
 
-export function TaskForm({ name, description, handleInputChange, handleKeyPress, createTask }) {
+export function TaskForm({ name, description, dueDate, handleInputChange, handleKeyPress, createTask }) {
 	return (
 		<tr>
 			<td>
@@ -38,6 +38,16 @@ export function TaskForm({ name, description, handleInputChange, handleKeyPress,
 					placeholder="Enter task description"
 				/>
 			</td>
+			<td>
+				<input
+					type="date"
+					id="dueDate"
+					name="dueDate"
+					value={dueDate}
+					onChange={handleInputChange}
+					className="form-control"
+				/>
+			</td>
 			<td></td>
 			<td>
 				<button type="button" className="btn btn-primary" onClick={createTask}>Create Task</button>
@@ -51,6 +61,7 @@ export function TaskHeadRow() {
 		<tr>
 			<th>Name</th>
 			<th>Description</th>
+			<th>Due date</th>
 			<th>Status</th>
 			<th>Actions</th>
 		</tr>
@@ -62,6 +73,7 @@ export function TaskList({ tasks, updateTaskStatus, deleteTask, getRowCssClass }
 		<tr key={task.id} className={getRowCssClass(task, index)}>
 			<td>{task.name}</td>
 			<td>{task.description}</td>
+			<td>{new Date(task.due_date).toLocaleDateString()}</td>
 			<td>{task.status}</td>
 			<td>
 				<div className="d-flex justify-content-between">
