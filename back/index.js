@@ -44,7 +44,8 @@ const createDatabaseTable = () => {
 		name VARCHAR(255) NOT NULL,
 		description VARCHAR,
 		status VARCHAR(10) NOT NULL CHECK (status IN ('pending', 'completed', 'overdue')) DEFAULT 'pending',
-		due_date DATE NOT NULL
+		due_date DATE NOT NULL,
+		priority SMALLINT NOT NULL CHECK (priority IN (3, 2, 1))
 	)`;
 
 	db.query(query, (err) => {
@@ -90,12 +91,12 @@ app.get("/api/getTasks", (req, res) => {
 })
 
 app.post("/api/createTask", (req, res) => {
-	const { name, description, dueDate } = req.body;
+	const { name, description, dueDate, priority } = req.body;
 	const query = `
-		INSERT INTO ${TABLE_NAME} (name, description, due_date) 
-		VALUES ($1,$2,$3)
+		INSERT INTO ${TABLE_NAME} (name, description, due_date, priority) 
+		VALUES ($1,$2,$3,$4)
 	`;
-	db.query(query, [name, description, dueDate], (error, result) => {
+	db.query(query, [name, description, dueDate, priority], (error, result) => {
 		if (error) {
 			console.log(error);
 			res.status(500).send(error);

@@ -45,6 +45,18 @@ td {
 	background-color: #ffdfdf !important;
 }
 
+.priority-3 {
+	font-weight:lighter;
+}
+
+.priority-2 {
+	font-weight:normal;
+}
+
+.priority-1 {
+	font-weight:bolder;
+}
+
 .App-logo {
   height: 40vmin;
   pointer-events: none;

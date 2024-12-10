@@ -8,6 +8,7 @@ A simple to-do list application that allows the user to keep tracks of his task 
 - Mark tasks as completed
 - Delete tasks
 - Give a task a due date
+- Give a task a priority level
 
 ## To Run
 Ensure you have docker installed on your machine then:
@@ -39,14 +40,16 @@ The backend plays the role of both a server and an API to keep the configuration
         "name": "Task 1",
         "description": "Description for Task 1",
         "status": "pending",
-		"due_date": "2023-10-02"
+		"due_date": "2023-10-02",
+		"priority": 3
     },
     {
         "id": 2,
         "name": "Task 2",
         "description": "Description for Task 2",
         "status": "completed",
-		"due_date": "2024-10-02"
+		"due_date": "2024-10-02",
+		"priority": 1
     },
     ...
 ]

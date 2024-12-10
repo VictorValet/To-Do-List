@@ -10,5 +10,6 @@ export function getRowCssClass(task, index) {
 	if (task.status === "completed" || task.status === "overdue") {
 		cssClass = `${task.status}-${evenOdd} `;	
 	}
+	cssClass += `priority-${task.priority}`;
 	return cssClass;
 }

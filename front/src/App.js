@@ -19,8 +19,9 @@ class App extends Component {
 			name: "",
 			description: "",
 			showAlert: false,
-			alertMessage: "Required: name (must be less than 255 characters), due date.",
-			dueDate: aWeekAway()		
+			alertMessage: "Required: name (must be less than 255 characters), due date, priority.",
+			dueDate: aWeekAway(),
+			priority: "2"		
 		}
   	}
 
@@ -28,7 +29,8 @@ class App extends Component {
 		this.setState({
 			name: "",
 			description: "",
-			dueDate: aWeekAway()
+			dueDate: aWeekAway(),
+			priority: "2"
 		});
 	}
 
@@ -59,8 +61,8 @@ class App extends Component {
 	 * Creates a new task and refresh the task list.
 	 */
 	createTask = () => {
-		const { name, description, showAlert, dueDate } = this.state;
-		if (!name.trim() || name.length > 255 || !dueDate) {
+		const { name, description, dueDate, priority, showAlert } = this.state;
+		if (!name.trim() || name.length > 255 || !dueDate || !priority) {
 			console.error("Error in form");
 			if (!showAlert) {
 				setTimeout(() => {
@@ -77,7 +79,7 @@ class App extends Component {
 			headers: {
 				"Content-Type": "application/json"
 			},
-			body: JSON.stringify({ name, description, dueDate })
+			body: JSON.stringify({ name, description, dueDate, priority })
 		})
 		.then(response => response.json())
 		.then(() => {
@@ -122,7 +124,7 @@ class App extends Component {
 	}
 
 	render() {
-		const { tasks, name, description, dueDate, showAlert, alertMessage } = this.state;
+		const { tasks, name, description, dueDate, priority, showAlert, alertMessage } = this.state;
 		
 		return (
 			<div className="container mt-5">
@@ -142,6 +144,7 @@ class App extends Component {
 							name={name}
 							description={description}
 							dueDate={dueDate}
+							priority={priority}
 							handleInputChange={this.handleInputChange}
 							handleKeyPress={this.handleKeyPress}
 							createTask={this.createTask}
