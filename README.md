@@ -11,8 +11,8 @@ A simple to-do list application that allows the user to keep tracks of his task 
 ## To Run
 Ensure you have docker installed on your machine then:
 ```
-git clone git@github.com:VictorValet/To-Do-List.git todo
-cd todo
+git clone git@github.com:VictorValet/ToDo-List.git
+cd ToDo-List
 bash env-setup.sh
 docker compose up --build
 ```
