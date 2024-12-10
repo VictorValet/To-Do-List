@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {
+	TaskForm,
 	TaskHeadRow,
 	TaskList
 } from './components.js'
@@ -13,11 +14,25 @@ class App extends Component {
 		super(props);
 		this.state = {
 			tasks: [],
+			name: "",
+			description: ""
 		}
   	}
 
+	reinitState = () => {
+		this.setState({
+			name: "",
+			description: ""
+		});
+	}
+
 	componentDidMount() {
 		this.fetchTasks();
+	}
+
+	handleInputChange = (event) => {
+		const { name, value } = event.target;
+		this.setState({ [name]: value });
 	}
 
 	fetchTasks = () => {
@@ -26,6 +41,32 @@ class App extends Component {
 		.then(response => response.json())
 		.then(json =>  this.setState({ tasks: json }))
 		.catch(error => console.error('Error fetching tasks:', error));
+	}
+
+	/**
+	 * Creates a new task and refresh the task list.
+	 */
+	createTask = () => {
+		const { name, description } = this.state;
+		if (!name.trim() || name.length > 255) {
+			console.error("Error in form");
+			return;
+		}
+
+		const url = "http://localhost:5000/api/createTask"
+		fetch(url, {
+			method: "POST",
+			headers: {
+				"Content-Type": "application/json"
+			},
+			body: JSON.stringify({ name, description })
+		})
+		.then(response => response.json())
+		.then(() => {
+			this.reinitState();
+			this.fetchTasks();
+		})
+		.catch(error => console.error('Error creating task:', error));
 	}
 
 	/**
@@ -41,7 +82,7 @@ class App extends Component {
 			body: JSON.stringify({ id: taskId, status })
 		})
 		.then(response => response.json())
-		.then(() => this.componentDidMount())
+		.then(() => this.fetchTasks())
 		.catch(error => console.error('Error updating task status:', error));
 	}
 
@@ -58,12 +99,12 @@ class App extends Component {
 			body: JSON.stringify({ id: taskId })
 		})
 		.then(response => response.json())
-		.then(() => this.componentDidMount())
+		.then(() => this.fetchTasks())
 		.catch(error => console.error('Error deleting task:', error));
 	}
 
 	render() {
-		const { tasks } = this.state;
+		const { tasks, name, description } = this.state;
 		
 		return (
 			<div className="container mt-5">
@@ -75,6 +116,12 @@ class App extends Component {
 						<TaskHeadRow/>
 					</thead>
 					<tbody>
+						<TaskForm
+							name={name}
+							description={description}
+							handleInputChange={this.handleInputChange}
+							createTask={this.createTask}
+						/>
 						<TaskList
 							tasks={tasks}
 							updateTaskStatus={this.updateTaskStatus}

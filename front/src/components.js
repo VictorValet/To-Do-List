@@ -1,3 +1,37 @@
+export function TaskForm({ name, description, handleInputChange, createTask }) {
+	return (
+		<tr>
+			<td>
+				<input
+					type="text"
+					id="name"
+					name="name"
+					value={name}
+					onChange={handleInputChange}
+					className="form-control"
+					placeholder="Enter task name"
+					autoFocus
+				/>
+			</td>
+			<td>
+				<input
+					type="text"
+					id="description"
+					name="description"
+					value={description}
+					onChange={handleInputChange}
+					className="form-control"
+					placeholder="Enter task description"
+				/>
+			</td>
+			<td></td>
+			<td>
+				<button type="button" className="btn btn-primary" onClick={createTask}>Create Task</button>
+			</td>
+		</tr>
+	);
+}
+
 export function TaskHeadRow() {
 	return (
 		<tr>
