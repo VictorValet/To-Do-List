@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import {
+	AlertMessage,
 	TaskForm,
 	TaskHeadRow,
 	TaskList
@@ -15,7 +16,9 @@ class App extends Component {
 		this.state = {
 			tasks: [],
 			name: "",
-			description: ""
+			description: "",
+			showAlert: false,
+			alertMessage: "Task name required, must be less than 255 characters."
 		}
   	}
 
@@ -53,9 +56,15 @@ class App extends Component {
 	 * Creates a new task and refresh the task list.
 	 */
 	createTask = () => {
-		const { name, description } = this.state;
+		const { name, description, showAlert } = this.state;
 		if (!name.trim() || name.length > 255) {
 			console.error("Error in form");
+			if (!showAlert) {
+				setTimeout(() => {
+					this.setState({ showAlert: false });
+				}, 3000);
+			}
+			this.setState({ showAlert: true });
 			return;
 		}
 
@@ -110,10 +119,14 @@ class App extends Component {
 	}
 
 	render() {
-		const { tasks, name, description } = this.state;
+		const { tasks, name, description, showAlert, alertMessage } = this.state;
 		
 		return (
 			<div className="container mt-5">
+				<AlertMessage
+					showAlert={showAlert}
+					alertMessage={alertMessage}
+				/>
 				<div>
 					<h1 className="display-4">Tasklist</h1>
 				</div>

@@ -1,3 +1,15 @@
+export function AlertMessage({ showAlert, alertMessage }) {
+	if (!showAlert) {
+		return "";
+	} else {
+		return (
+			<div className="alert alert-danger alert-dismissible fade show" role="alert">
+				{alertMessage}
+			</div>
+		);
+	}
+}
+
 export function TaskForm({ name, description, handleInputChange, handleKeyPress, createTask }) {
 	return (
 		<tr>
