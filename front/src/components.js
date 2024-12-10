@@ -1,4 +1,4 @@
-export function TaskForm({ name, description, handleInputChange, createTask }) {
+export function TaskForm({ name, description, handleInputChange, handleKeyPress, createTask }) {
 	return (
 		<tr>
 			<td>
@@ -8,6 +8,7 @@ export function TaskForm({ name, description, handleInputChange, createTask }) {
 					name="name"
 					value={name}
 					onChange={handleInputChange}
+					onKeyPress={handleKeyPress}
 					className="form-control"
 					placeholder="Enter task name"
 					autoFocus
@@ -20,6 +21,7 @@ export function TaskForm({ name, description, handleInputChange, createTask }) {
 					name="description"
 					value={description}
 					onChange={handleInputChange}
+					onKeyPress={handleKeyPress}
 					className="form-control"
 					placeholder="Enter task description"
 				/>

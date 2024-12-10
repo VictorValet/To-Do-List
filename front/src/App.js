@@ -35,6 +35,12 @@ class App extends Component {
 		this.setState({ [name]: value });
 	}
 
+	handleKeyPress = (event) => {
+		if (event.key === 'Enter') {
+			this.createTask();
+		}
+	}
+
 	fetchTasks = () => {
 		const url = "http://localhost:5000/api/getTasks";
 		fetch(url)
@@ -120,6 +126,7 @@ class App extends Component {
 							name={name}
 							description={description}
 							handleInputChange={this.handleInputChange}
+							handleKeyPress={this.handleKeyPress}
 							createTask={this.createTask}
 						/>
 						<TaskList
