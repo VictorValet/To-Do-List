@@ -1,26 +1,55 @@
 import React, { Component } from 'react';
-import logo from './logo.svg';
+import {
+	TaskHeadRow,
+	TaskList
+} from './components.js'
+import { 
+	getRowCssClass
+} from './utils';
 import './App.css';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+class App extends Component {
+	constructor(props) {
+		super(props);
+		this.state = {
+			tasks: [],
+		}
+  	}
+
+	componentDidMount() {
+		this.fetchTasks();
+	}
+
+	fetchTasks = () => {
+		const url = "http://localhost:5000/api/getTasks";
+		fetch(url)
+		.then(response => response.json())
+		.then(json =>  this.setState({ tasks: json }))
+		.catch(error => console.error('Error fetching tasks:', error));
+	}
+
+	render() {
+		const { tasks } = this.state;
+		
+		return (
+			<div className="container mt-5">
+				<div>
+					<h1 className="display-4">Tasklist</h1>
+				</div>
+				<table className="table table-striped">
+					<thead className="thead-light">
+						<TaskHeadRow/>
+					</thead>
+					<tbody>
+						<TaskList
+							tasks={tasks}
+							getRowCssClass={getRowCssClass}
+						/>
+					</tbody>
+				</table>
+			</div>
+		);
+	}
 }
 
 export default App;
