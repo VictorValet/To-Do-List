@@ -43,7 +43,7 @@ const createDatabaseTable = () => {
 		id SERIAL PRIMARY KEY,
 		name VARCHAR(255) NOT NULL,
 		description VARCHAR,
-		status VARCHAR(10) NOT NULL CHECK (status IN ('pending', 'completed'))
+		status VARCHAR(10) NOT NULL CHECK (status IN ('pending', 'completed')) DEFAULT 'pending'
 	)`;
 
 	db.query(query, (err) => {
@@ -60,6 +60,60 @@ app.use(express.static('front/build'));
 app.use(express.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
+app.get("/api/getTasks", (req, res) => {
+	const querySelect = `SELECT * FROM ${TABLE_NAME}`;
+	db.query(querySelect, (err, result) => {
+		if (err) {
+			console.error(err);
+			res.status(500).send(err);
+		} else {
+			res.send(result.rows);
+		}
+	});
+})
+
+app.post("/api/createTask", (req, res) => {
+	const { name, description } = req.body;
+	const query = `
+		INSERT INTO ${TABLE_NAME} (name, description) 
+		VALUES ($1,$2)
+	`;
+	db.query(query, [name, description], (error, result) => {
+		if (error) {
+			console.log(error);
+			res.status(500).send(error);
+		} else {
+			res.send(result);
+		}
+	});
+})
+
+app.post("/api/updateTaskStatus", (req, res) => {
+	const { id, status } = req.body;
+	const query = `UPDATE ${TABLE_NAME} SET status=$1 WHERE id=$2`;
+	db.query(query, [status, id], (error, result) => {
+		if (error) {
+			console.log(error);
+			res.status(500).send(error);
+		} else {
+			res.send(result);
+		}	
+	});
+})
+
+app.delete("/api/deleteTask", (req, res) => {
+	const { id } = req.body;
+	const query = `DELETE FROM ${TABLE_NAME} WHERE id=$1`;
+	db.query(query, [id], (error, result) => {
+		if (error) {
+			console.log(error);
+			res.status(500).send(error);
+		} else {
+			res.send(result);
+		}
+	});
+})
+
 app.listen(PORT, () => {
-	console.log(`Server is running on port ${PORT}`)
+	console.log(`Server is running on port ${PORT}`);
 })
