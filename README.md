@@ -9,6 +9,8 @@ A simple to-do list application that allows the user to keep tracks of his task 
 - Delete tasks
 - Give a task a due date
 - Give a task a priority level
+- Search tasks by name
+- Sort tasks by name, due date or priority
 
 ## To Run
 Ensure you have docker installed on your machine then:
@@ -27,7 +29,7 @@ Access the interface at [http://localhost:5000](http://localhost:5000)
   * Bootstrap
 - Database: PostgreSQL
 
-The backend plays the role of both a server and an API to keep the configuration minimal and simple.
+The backend plays the role of both a server and an API, to keep the configuration minimal and simple.
 
 ## API
 * GET /api/getTasks
@@ -57,7 +59,7 @@ The backend plays the role of both a server and an API to keep the configuration
 
 * POST /api/createTask
     - Creates a new task in the database.
-    - Request body must contain 'name', 'description'.
+    - Request body must contain 'name', 'dueDate' and 'priority' and can contain 'description'.
 
 * POST /api/updateTaskStatus
     - Updates the status of an existing task in the database.

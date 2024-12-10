@@ -8,7 +8,9 @@ import {
 } from './components.js'
 import { 
 	aWeekAway,
-	getRowCssClass
+	getRowCssClass,
+	getSortButtonCssClass,
+	getSortedTaskList
 } from './utils';
 import './App.css';
 
@@ -23,7 +25,9 @@ class App extends Component {
 			alertMessage: "Required: name (must be less than 255 characters), due date, priority.",
 			dueDate: aWeekAway(),
 			priority: "2",
-			searchBar: ""		
+			searchBar: "",
+			sortBy: "name",
+			sortOrder: 1		
 		}
   	}
 
@@ -42,7 +46,6 @@ class App extends Component {
 		});
 	}
 
-
 	componentDidMount() {
 		this.fetchTasks();
 	}
@@ -50,6 +53,13 @@ class App extends Component {
 	handleInputChange = (event) => {
 		const { name, value } = event.target;
 		this.setState({ [name]: value });
+	}
+
+	handleSortingChange = (column) => {
+		this.setState((prevState) => ({
+			sortOrder: column === prevState.sortBy ? -1 * prevState.sortOrder : 1,
+			sortBy: column
+		}));
 	}
 
 	handleKeyPress = (event) => {
@@ -67,7 +77,7 @@ class App extends Component {
 	}
 
 	/**
-	 * Creates a new task and refresh the task list.
+	 * Create a new task and refresh the task list.
 	 */
 	createTask = () => {
 		const { name, description, dueDate, priority, showAlert } = this.state;
@@ -133,8 +143,9 @@ class App extends Component {
 	}
 
 	render() {
-		const { tasks, name, description, dueDate, priority, searchBar, showAlert, alertMessage } = this.state;
+		const { tasks, name, description, dueDate, priority, searchBar, sortBy, sortOrder, showAlert, alertMessage } = this.state;
 		const filteredTasks = tasks.filter(task => task.name.toLowerCase().includes(searchBar.toLowerCase()));	
+		const sortedTasks = getSortedTaskList(filteredTasks, sortBy, sortOrder);
 
 		return (
 			<div className="container mt-5">
@@ -152,7 +163,12 @@ class App extends Component {
 				/>
 				<table className="table table-striped">
 					<thead className="thead-light">
-						<TaskHeadRow/>
+						<TaskHeadRow
+							sortBy={sortBy}
+							sortOrder={sortOrder}
+							handleSortingChange={this.handleSortingChange}
+							getSortButtonCssClass={getSortButtonCssClass}
+						/>
 					</thead>
 					<tbody>
 						<TaskForm
@@ -165,7 +181,7 @@ class App extends Component {
 							createTask={this.createTask}
 						/>
 						<TaskList
-							tasks={filteredTasks}
+							tasks={sortedTasks}
 							updateTaskStatus={this.updateTaskStatus}
 							deleteTask={this.deleteTask}
 							getRowCssClass={getRowCssClass}

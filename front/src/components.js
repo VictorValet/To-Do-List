@@ -94,13 +94,22 @@ export function TaskForm({ name, description, dueDate, priority, handleInputChan
 	);
 }
 
-export function TaskHeadRow() {
+export function TaskHeadRow({ sortBy, sortOrder, handleSortingChange, getSortButtonCssClass }) {
 	return (
 		<tr>
-			<th>Name</th>
+			<th onClick={() => handleSortingChange("name")}>
+				Name
+				<i class={getSortButtonCssClass("name", sortBy, sortOrder)}></i>
+			</th>
 			<th>Description</th>
-			<th>Due date</th>
-			<th>Priority</th>
+			<th onClick={() => handleSortingChange("due_date")}>
+				Due date
+				<i class={getSortButtonCssClass("due_date", sortBy, sortOrder)}></i>
+			</th>
+			<th onClick={() => handleSortingChange("priority")}>
+				Priority
+				<i class={getSortButtonCssClass("priority", sortBy, sortOrder)}></i>
+			</th>
 			<th>Status</th>
 			<th>Actions</th>
 		</tr>
